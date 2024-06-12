@@ -1,0 +1,9 @@
+matplotlib
+scikit-image
+numpy
+torch
+torchvision
+scikit-learn
+statsmodels
+Pillow
+requests
