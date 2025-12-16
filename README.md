@@ -1,63 +1,53 @@
+# 🍋 Custom LIME Implementation for Computer Vision
 
-# LIME Implementation
+[![Python](https://img.shields.io/badge/Python-3.9%2B-blue)]()
+[![PyTorch](https://img.shields.io/badge/PyTorch-2.0%2B-red)]()
+[![License](https://img.shields.io/badge/License-MIT-green)]()
 
-## Introduction
+A robust, from-scratch implementation of the **LIME (Local Interpretable Model-agnostic Explanations)** algorithm for explaining black-box Computer Vision models.
 
-This repository contains an implementation of the LIME (Local Interpretable Model-agnostic Explanations) algorithm. LIME is used to explain predictions of any machine learning classifier by approximating it locally with an interpretable model.
+This implementation allows users to visualize which parts of an image a Deep Learning model (like InceptionV3) focuses on when making a prediction.
 
-## Algorithm Explanation
+![LIME Demo Result](LIME-Implementation\demo_image.png) 
 
-LIME aims to explain individual predictions of black-box machine learning models. It does so by:
-1. Perturbing the input data and observing how the predictions change.
-2. Fitting an interpretable model (like a linear model) to these perturbed samples and their predictions.
-3. Using this interpretable model to explain the behavior of the black-box model locally.
+## 🚀 Features
+* **Modular Design:** Clean separation between the Explainer logic and Visualization.
+* **Model Agnostic:** Can be easily adapted for any PyTorch CNN.
+* **Interpretable Visualization:** Highlights top superpixels contributing to the prediction.
+* **Weighted Linear Regression:** Implements the core mathematical concept of LIME using weighted cosine similarity.
 
-### Key Steps in LIME:
-1. **Input Perturbation**: Generate perturbed samples around the instance to be explained.
-2. **Model Prediction**: Get predictions for these perturbed samples using the black-box model.
-3. **Weight Calculation**: Assign weights to perturbed samples based on their similarity to the original instance.
-4. **Interpretable Model**: Fit an interpretable model (e.g., linear regression) to the weighted perturbed samples.
-5. **Explanation**: Use the interpretable model to explain the prediction of the original instance.
+## 🛠️ Installation
 
-## Installation and Setup
+1.  Clone the repository:
+    ```bash
+    git clone [https://github.com/Samarth-KY/LIME-Implementation.git](https://github.com/Samarth-KY/LIME-Implementation.git)
+    cd LIME-Implementation
+    ```
 
-You can install these libraries using `pip`:
-```bash
-pip install matplotlib scikit-image numpy torch torchvision scikit-learn statsmodels pillow
-```
+2.  Install dependencies:
+    ```bash
+    pip install -r requirements.txt
+    ```
 
-## Usage
+## 💻 Usage
 
-### Preprocessing the Image
-
-There are two preprocessing functions provided:
-- `preprocess_image_inception(img)`: Preprocesses the image according to the requirements of InceptionV3.
-- `preprocess_image_segment(img)`: Preprocesses the image for segmentation purposes.
-
-### Loading and Displaying Images
-
-Images are loaded from URLs and segmented using the `quickshift` algorithm. The segments are then displayed with their boundaries marked.
+### Quick Start (Python)
+You can run the explainer directly on any image URL:
 
 ```python
-# Example code to load and display segmented images
-img1_url = 'https://example.com/image1.jpg'
+from lime_explainer import LimeExplainer
+from torchvision import models
 
-# Load images
-img1 = Image.open(BytesIO(urllib.request.urlopen(img1_url).read()))
+# 1. Load your pre-trained model here
+model = models.inception_v3(weights='DEFAULT')
 
-# Preprocess and segment images
-img1_np = preprocess_image_segment(img1)
-segments1 = quickshift(img1_np, kernel_size=4, max_dist=200, ratio=0.2)
+# 2. Initialize LIME explainer
+explainer = LimeExplainer(model)
 
-# Display segments
-fig, axes = plt.subplots(1, 1, figsize=(15, 6))
-axes[0].imshow(mark_boundaries(img1_np, segments1))
-plt.show()
-```
+# 3. Load an image and explain it
+# top_k specifies how many of the model’s top predicted classes to explain (e.g., top_k=2 explains the top-2 predictions)
+img = explainer.load_image_from_url('[https://example.com/my_image.jpg](https://example.com/my_image.jpg)')
+results = explainer.explain(img, top_k=2)
 
-
-## Useful Links
-
-- [LIME Paper](https://arxiv.org/abs/1602.04938): Original paper introducing the LIME algorithm.
-- [skimage Quickshift](https://scikit-image.org/docs/dev/api/skimage.segmentation.html#skimage.segmentation.quickshift): Documentation for the `quickshift` segmentation algorithm.
-- [Torchvision](https://pytorch.org/vision/stable/index.html): PyTorch library for image transformations and models.
+# 4. Visualize
+explainer.visualize(img, results)
