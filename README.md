@@ -8,7 +8,7 @@ A robust, from-scratch implementation of the **LIME (Local Interpretable Model-a
 
 This implementation allows users to visualize which parts of an image a Deep Learning model (like InceptionV3) focuses on when making a prediction.
 
-![LIME Demo Result](LIME-Implementation\demo_image.png) 
+![LIME Demo Result]([LIME-Implementation\demo_image.png](https://github.com/Samarth-KY/LIME-Implementation/blob/main/demo_image.png)) 
 
 ## 🚀 Features
 * **Modular Design:** Clean separation between the Explainer logic and Visualization.
